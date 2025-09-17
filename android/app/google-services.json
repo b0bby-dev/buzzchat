@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "949474699855",
+    "project_id": "buzzchat-65a3c",
+    "storage_bucket": "buzzchat-65a3c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:949474699855:android:ae9675e5af1edecb63583a",
+        "android_client_info": {
+          "package_name": "com.buzzchat"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAhz5c-diY3t5xR8dSwd1ygyYwWpe8Eqdg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
