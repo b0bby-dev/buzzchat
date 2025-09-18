@@ -33,7 +33,7 @@ const SplashScreens = ({ navigation }: any) => {
         }),
 
         Animated.timing(textMove, {
-          toValue: height * 0.05,
+          toValue: height * 0.1,
           duration: 1000,
           easing: Easing.inOut(Easing.ease),
           useNativeDriver: true,
@@ -45,7 +45,10 @@ const SplashScreens = ({ navigation }: any) => {
           useNativeDriver: true,
         }),
       ]).start(() => {
-        navigation.replace('LoginScreen');
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'WelcomeScreen' }],
+        });
       });
     }, 1000);
   }, [logoAnim, logoFade, textMove, textFade, navigation]);
