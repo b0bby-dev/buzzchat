@@ -37,7 +37,6 @@ const WelcomeScreen = ({ navigation }: any) => {
 
       {/* Language Selector */}
       <View style={styles.selectorContainer}>
-        <Text style={styles.selectorLabel}>{t('selectLanguage')}</Text>
         <View style={styles.pickerWrapper}>
           <Picker
             selectedValue={selectedLang}
@@ -90,28 +89,22 @@ const styles = StyleSheet.create({
     marginTop: 20,
     width: '80%',
   },
-  selectorLabel: {
-    fontSize: 16,
-    fontWeight: '600',
-    marginBottom: 5,
-    textAlign: 'center',
-  },
   pickerWrapper: {
     borderWidth: 1,
     borderColor: '#ccc',
-    borderRadius: (width * 0.15) / 2,
+    borderRadius: 10,
     overflow: 'hidden',
   },
   picker: {
     width: '100%',
-    height: width * 0.15,
+    height: 50,
   },
   btn: {
     backgroundColor: '#FCBB13',
     paddingVertical: height * 0.02,
-    paddingHorizontal: width * 0.1,
+    paddingHorizontal: width * 0.2,
     borderRadius: 25,
-    marginTop: height * 0.05,
+    marginTop: height * 0.1,
   },
   btnTxt: {
     color: '#fff',
