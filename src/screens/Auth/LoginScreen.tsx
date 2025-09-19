@@ -7,14 +7,40 @@ import {
   TouchableOpacity,
   Dimensions,
 } from 'react-native';
-import CountryPicker, { CountryCode } from 'react-native-country-picker-modal';
+import auth from '@react-native-firebase/auth';
+import CountryPicker from 'react-native-country-picker-modal';
 
 const { width, height } = Dimensions.get('window');
+
+import { CountryCode } from 'react-native-country-picker-modal';
 
 const LoginScreen = () => {
   const [countryCode, setCountryCode] = useState<CountryCode>('IN');
   const [callingCode, setCallingCode] = useState('91');
   const [phoneNumber, setPhoneNumber] = useState('');
+  const [confirm, setConfirm] = useState<any>(null);
+  const [otp, setOtp] = useState('');
+
+  // Step 1: Request OTP
+  const signInWithPhoneNumber = async () => {
+    try {
+      const phone = `+${callingCode}${phoneNumber}`;
+      const confirmation = await auth().signInWithPhoneNumber(phone);
+      setConfirm(confirmation);
+    } catch (error) {
+      console.error('Error requesting OTP: ', error);
+    }
+  };
+
+  // Step 2: Confirm OTP
+  const confirmCode = async () => {
+    try {
+      await confirm.confirm(otp);
+      console.log('✅ Phone number verified!');
+    } catch (error) {
+      console.error('❌ Invalid code.', error);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -24,37 +50,51 @@ const LoginScreen = () => {
         apply.
       </Text>
 
-      {/* Country Picker + Phone Number */}
-      <View style={styles.phoneContainer}>
-        <CountryPicker
-          countryCode={countryCode}
-          withCallingCode
-          withFlag
-          withFilter
-          withEmoji
-          onSelect={country => {
-            setCountryCode(country.cca2);
-            setCallingCode(country.callingCode[0]);
-          }}
-        />
+      {!confirm ? (
+        <>
+          {/* Country Picker + Phone Number */}
+          <View style={styles.phoneContainer}>
+            <CountryPicker
+              countryCode={countryCode}
+              withCallingCode
+              withFlag
+              withFilter
+              withEmoji
+              onSelect={country => {
+                setCountryCode(country.cca2);
+                setCallingCode(country.callingCode[0]);
+              }}
+            />
 
-        <Text style={styles.callingCode}>+{callingCode}</Text>
+            <Text style={styles.callingCode}>+{callingCode}</Text>
 
-        <TextInput
-          style={styles.input}
-          placeholder="Phone number"
-          keyboardType="phone-pad"
-          value={phoneNumber}
-          onChangeText={setPhoneNumber}
-        />
-      </View>
+            <TextInput
+              style={styles.input}
+              placeholder="Phone number"
+              keyboardType="phone-pad"
+              value={phoneNumber}
+              onChangeText={setPhoneNumber}
+            />
+          </View>
 
-      <TouchableOpacity
-        style={styles.btn}
-        onPress={() => console.log('+', callingCode, phoneNumber)}
-      >
-        <Text style={styles.btnText}>Continue</Text>
-      </TouchableOpacity>
+          <TouchableOpacity style={styles.btn} onPress={signInWithPhoneNumber}>
+            <Text style={styles.btnText}>Send OTP</Text>
+          </TouchableOpacity>
+        </>
+      ) : (
+        <>
+          <TextInput
+            style={styles.inputOtp}
+            placeholder="Enter OTP"
+            keyboardType="number-pad"
+            value={otp}
+            onChangeText={setOtp}
+          />
+          <TouchableOpacity style={styles.btn} onPress={confirmCode}>
+            <Text style={styles.btnText}>Verify OTP</Text>
+          </TouchableOpacity>
+        </>
+      )}
     </View>
   );
 };
@@ -99,6 +139,15 @@ const styles = StyleSheet.create({
     flex: 1,
     marginLeft: 10,
     fontSize: 16,
+  },
+  inputOtp: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 10,
+    height: 50,
+    fontSize: 18,
+    paddingHorizontal: 15,
+    marginBottom: 20,
   },
   btn: {
     backgroundColor: '#FCBB13',

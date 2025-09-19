@@ -8,7 +8,7 @@ import i18n from './i18n';
 import SplashScreen from './src/screens/Splash/SplashScreen';
 import WelcomeScreen from './src/screens/Welcome/WelcomeScreen';
 import LoginScreen from './src/screens/Auth/LoginScreen';
-import SignupScreen from './src/screens/Auth/SignupScreen';
+import VerifyScreen from './src/screens/Auth/VerifyScreen';
 
 const Stack = createStackNavigator();
 
@@ -32,7 +32,7 @@ const App = () => {
             component={LoginScreen}
             options={{ headerShown: false }}
           />
-          <Stack.Screen name="SignupScreen" component={SignupScreen} />
+          <Stack.Screen name="VerifyScreen" component={VerifyScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </I18nextProvider>
