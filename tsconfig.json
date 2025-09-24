@@ -1,5 +1,11 @@
 {
   "extends": "@react-native/typescript-config",
-  "include": ["**/*.ts", "**/*.tsx"],
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    "scr/i18n/i18n.ts",
+    "scr/i18n/locals/hindi.js",
+    "scr/i18n/locals/english.js"
+  ],
   "exclude": ["**/node_modules", "**/Pods"]
 }

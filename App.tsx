@@ -1,45 +1,101 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
+import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
+import React, {
+  Children,
+  createContext,
+  use,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
+import { createStackNavigator } from '@react-navigation/stack';
+import { NavigationContainer } from '@react-navigation/native';
+import { I18nextProvider, useSSR } from 'react-i18next';
+import i18n from './scr/i18n/i18n';
 
-import { NewAppScreen } from '@react-native/new-app-screen';
-import { StatusBar, StyleSheet, useColorScheme, View } from 'react-native';
-import {
-  SafeAreaProvider,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context';
+import Splash from './scr/screens/Splash/Splash';
+import Welcome from './scr/screens/Welcome/Welcome';
+import Login from './scr/screens/Auth/Login';
+import SignUp from './scr/screens/Auth/SignUp';
+import Home from './scr/screens/Home/Home';
+import Chat from './scr/screens/Chat/Chat';
+import { getAuth, onAuthStateChanged } from '@react-native-firebase/auth';
 
-function App() {
-  const isDarkMode = useColorScheme() === 'dark';
+const Stack = createStackNavigator();
+
+const AuthenticatedUserContext = createContext({});
+
+const AuthenticatedUserContextProvider = ({ children }: any) => {
+  const [user, setUser] = useState(null);
 
   return (
-    <SafeAreaProvider>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <AppContent />
-    </SafeAreaProvider>
+    <AuthenticatedUserContext.Provider value={{ user, setUser }}>
+      {children}
+    </AuthenticatedUserContext.Provider>
   );
-}
+};
 
-function AppContent() {
-  const safeAreaInsets = useSafeAreaInsets();
+const ChatStack = () => {
+  return (
+    <Stack.Navigator initialRouteName="Home">
+      <Stack.Screen name="Home" component={Home} />
+      <Stack.Screen name="Chat" component={Chat} />
+    </Stack.Navigator>
+  );
+};
+
+const AuthStack = () => {
+  return (
+    <Stack.Navigator
+      initialRouteName="Splash"
+      screenOptions={{ headerShown: false }}
+    >
+      <Stack.Screen name="Splash" component={Splash} />
+      <Stack.Screen name="Welcome" component={Welcome} />
+      <Stack.Screen name="Login" component={Login} />
+      <Stack.Screen name="SignUp" component={SignUp} />
+    </Stack.Navigator>
+  );
+};
+
+const RootNavigator = () => {
+  const { user, setUser } = useContext(AuthenticatedUserContext) as any;
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(
+      getAuth(),
+      async authenticatedUser => {
+        authenticatedUser ? setUser(authenticatedUser) : setUser(null);
+      },
+    );
+
+    setLoading(false);
+    return unsubscribe();
+  }, [user]);
+
+  if (loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size={'large'} />
+      </View>
+    );
+  }
 
   return (
-    <View style={styles.container}>
-      <NewAppScreen
-        templateFileName="App.tsx"
-        safeAreaInsets={safeAreaInsets}
-      />
-    </View>
+    <NavigationContainer>
+      {user ? <ChatStack /> : <AuthStack />}
+    </NavigationContainer>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
+const App = () => {
+  return (
+    <I18nextProvider i18n={i18n}>
+      <AuthenticatedUserContextProvider>
+        <RootNavigator />
+      </AuthenticatedUserContextProvider>
+    </I18nextProvider>
+  );
+};
 
 export default App;
