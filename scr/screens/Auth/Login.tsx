@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: '#FCBB13',
-    height: 58,
+    height: 51,
     borderRadius: 25,
     justifyContent: 'center',
     alignItems: 'center',
@@ -152,7 +152,7 @@ const styles = StyleSheet.create({
   buttonTxt: {
     fontWeight: 'bold',
     color: '#fff',
-    fontSize: 18,
+    fontSize: 21,
   },
   signupRow: {
     marginTop: 20,
