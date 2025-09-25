@@ -1,15 +1,8 @@
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
-import React, {
-  Children,
-  createContext,
-  use,
-  useContext,
-  useEffect,
-  useState,
-} from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
-import { I18nextProvider, useSSR } from 'react-i18next';
+import { I18nextProvider } from 'react-i18next';
 import i18n from './scr/i18n/i18n';
 
 import Splash from './scr/screens/Splash/Splash';
@@ -20,12 +13,23 @@ import Home from './scr/screens/Home/Home';
 import Chat from './scr/screens/Chat/Chat';
 import { getAuth, onAuthStateChanged } from '@react-native-firebase/auth';
 
+type AuthUserContextType = {
+  user: any;
+  setUser: React.Dispatch<React.SetStateAction<any>>;
+};
+
+const AuthenticatedUserContext = createContext<AuthUserContextType | undefined>(
+  undefined,
+);
+
 const Stack = createStackNavigator();
 
-const AuthenticatedUserContext = createContext({});
-
-const AuthenticatedUserContextProvider = ({ children }: any) => {
-  const [user, setUser] = useState(null);
+const AuthenticatedUserContextProvider = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
+  const [user, setUser] = useState<any>(null);
 
   return (
     <AuthenticatedUserContext.Provider value={{ user, setUser }}>
@@ -58,7 +62,7 @@ const AuthStack = () => {
 };
 
 const RootNavigator = () => {
-  const { user, setUser } = useContext(AuthenticatedUserContext) as any;
+  const { user, setUser } = useContext(AuthenticatedUserContext)!;
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -66,12 +70,12 @@ const RootNavigator = () => {
       getAuth(),
       async authenticatedUser => {
         authenticatedUser ? setUser(authenticatedUser) : setUser(null);
+        setLoading(false);
       },
     );
 
-    setLoading(false);
-    return unsubscribe();
-  }, [user]);
+    return unsubscribe;
+  }, []);
 
   if (loading) {
     return (
