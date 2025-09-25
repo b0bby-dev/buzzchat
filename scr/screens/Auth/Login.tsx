@@ -28,10 +28,13 @@ const Login = ({ navigation }: any) => {
   const handleLogin = () => {
     if (email !== '' && password !== '') {
       signInWithEmailAndPassword(getAuth(), email, password)
-        .then(() => {
+        .then(r => {
+          console.log('Response', r);
           console.log('Login success');
+          Alert.alert('Login success');
         })
         .catch(e => {
+          console.log(e, 'e');
           Alert.alert('Login error', e.message);
         });
     }

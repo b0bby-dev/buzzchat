@@ -4,6 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 import { I18nextProvider } from 'react-i18next';
 import i18n from './scr/i18n/i18n';
+import { getAuth, onAuthStateChanged } from '@react-native-firebase/auth';
 
 import Splash from './scr/screens/Splash/Splash';
 import Welcome from './scr/screens/Welcome/Welcome';
@@ -11,7 +12,8 @@ import Login from './scr/screens/Auth/Login';
 import SignUp from './scr/screens/Auth/SignUp';
 import Home from './scr/screens/Home/Home';
 import Chat from './scr/screens/Chat/Chat';
-import { getAuth, onAuthStateChanged } from '@react-native-firebase/auth';
+import Contacts from './scr/screens/Contacts/Contacts';
+import ProfileScreen from './scr/screens/Profile/Profile';
 
 type AuthUserContextType = {
   user: any;
@@ -43,6 +45,8 @@ const ChatStack = () => {
     <Stack.Navigator initialRouteName="Home">
       <Stack.Screen name="Home" component={Home} />
       <Stack.Screen name="Chat" component={Chat} />
+      <Stack.Screen name="Contacts" component={Contacts} />
+      <Stack.Screen name="Profile" component={ProfileScreen} />
     </Stack.Navigator>
   );
 };
