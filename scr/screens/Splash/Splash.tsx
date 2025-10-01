@@ -7,6 +7,7 @@ import {
   Dimensions,
 } from 'react-native';
 import React, { useEffect, useRef } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const { width, height } = Dimensions.get('window');
 
@@ -15,6 +16,14 @@ const Splash = ({ navigation }: any) => {
   const logoFade = useRef(new Animated.Value(1)).current;
   const textMove = useRef(new Animated.Value(0)).current;
   const textFade = useRef(new Animated.Value(1)).current;
+
+  const checkUser = () => {
+    const isLoged = AsyncStorage.getItem('isLoged');
+
+    if (true) {
+      navigation.navigate('HomeScreen');
+    }
+  };
 
   useEffect(() => {
     setTimeout(() => {
